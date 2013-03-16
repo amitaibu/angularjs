@@ -1,13 +1,11 @@
 <?php
 
 /**
- * Implements hook_library
- *
- * @return array
+ * Implements hook_library().
  */
 function angularjs_library() {
   $libraries = array();
-  $library_path = base_path() . 'sites/all/libraries/angular';
+  $library_path = libraries_get_path('angular');
 
   $js = array(
     $library_path . '/angular.min.js' => array(),
@@ -21,7 +19,7 @@ function angularjs_library() {
       $js[$path] = $options;
     }
   }
-  
+
   $libraries['angularjs'] = array(
     'title' => 'AngularJS',
     'website' => 'angularjs.org',
@@ -38,43 +36,47 @@ function angularjs_library() {
     ),
   );
 
-  drupal_add_js(array('restws_csrf_token' => drupal_get_token('restws')), 'setting');
-  
+  $settings = array(
+    'restws_csrf_token' => drupal_get_token('restws')
+  );
+
+  drupal_add_js($settings, 'setting');
+
   return $libraries;
 }
 
 /**
  * Returns the registered AngularJS modules
- * 
+ *
  * @param string $type
  * @param boolean $reset
  * @return array
  */
 function angularjs_get_modules($type, $reset = FALSE) {
   $name = 'angularjs_' . $type;
-  
+
   $modules = &drupal_static($name, array());
-  
+
   if (TRUE === empty($resources)) {
     $cached_resources = cache_get($name);
 
     if (FALSE === isset($cached_resources->data) || TRUE == $reset) {
       $resources = module_invoke_all($name);
       drupal_alter($name, $resources);
-      
+
       cache_set($name, $resources);
     }
     else {
       $resources = $cached_resources->data;
     }
   }
-  
+
   return $resources;
 }
 
 /**
  * Returns a list of AngularJS resources exposed by modules
- * 
+ *
  * @param boolean $reset
  * @return array
  */
@@ -114,7 +116,7 @@ function angularjs_get_services($reset = FALSE) {
 
 /**
  * Implements hook_angularjs_resources
- * 
+ *
  * @return array
  */
 function angularjs_angularjs_resources() {
@@ -137,49 +139,49 @@ function angularjs_template_output($var) {
 /**
  * Adds an Angular JS template partial to be sent to the page. Takes either a text
  * template or a render array
- * 
+ *
  * @param string $name
  * @param mixed $output
  * @return array
  */
 function angularjs_add_partial($name = NULL, $output = NULL) {
   $partials = &drupal_static(__FUNCTION__, array());
-  
+
   if (NULL != $name) {
     $partials[$name] = $output;
   }
-  
+
   return $partials;
 }
 
 /**
  * Implements hook_page_alter
- * 
+ *
  * Adds partials to the page footer
- * 
+ *
  * @param array $variables
  */
 function angularjs_page_alter(&$variables) {
   $partials = angularjs_add_partial();
-  
+
   drupal_alter('angularjs_partials', $partials);
-  
+
   foreach ($partials as $name => $output) {
-    
+
     // If we have a render array render it
     if (TRUE === is_array($output)) {
       $output = render($output);
     }
-    
+
     $element = array(
       '#tag' => 'script',
       '#value' => $output,
       '#attributes' => array(
         'type' => 'text/ng-template',
-        'id' => $name,  
-      )  
+        'id' => $name,
+      )
     );
-    
+
     $variables['footer']['partial_' . $name] = array('#markup' => theme('html_tag', array('element' => $element)));
   }
 }

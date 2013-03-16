@@ -39,6 +39,16 @@ function angularjs_examples_nodes_list() {
     '#attributes' => array(
       'ng-model' => 'nodetype',
     ),
+    '#description' => t('Filter by content-type.'),
+  );
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Filter'),
+    '#attributes' => array(
+      'ng-model' => 'query.title',
+    ),
+    '#description' => t('Filter by title.'),
   );
 
   angularjs_template_output(theme('angularjs_examples_nodes_list', array('query' => $form)));

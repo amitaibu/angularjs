@@ -1,6 +1,4 @@
-<?php render($form); dpm($form); ?>
-
-<input type="text" ng-model="query.title" placeholder="Enter a name here">
+<?php print render($query); ?>
 
 <table
 	class="sticky-enabled table-select-processed tableheader-processed sticky-table">

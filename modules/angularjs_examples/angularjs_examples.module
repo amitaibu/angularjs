@@ -2,7 +2,7 @@
 
 /**
  * Implements hook_menu
- * 
+ *
  * @return array
  */
 function angularjs_examples_menu() {
@@ -13,7 +13,7 @@ function angularjs_examples_menu() {
     'page callback' => 'angularjs_examples_nodes',
     'access arguments' => array('access content'),
   );
-  
+
   $items['angular/nodes/list'] = array(
     'title' => t('Nodes'),
     'page callback' => 'angularjs_examples_nodes_list',
@@ -26,28 +26,39 @@ function angularjs_examples_menu() {
 
 /**
  * Menu callback for node list template
- * 
+ *
  * @return string
  */
 function angularjs_examples_nodes_list() {
-  angularjs_template_output(theme('angularjs_examples_nodes_list', array('types' => node_type_get_names())));
+  $form = array();
+
+  $form['node_type'] = array(
+    '#type' => 'select',
+    '#title' => t('Content type'),
+    '#options' => node_type_get_names(),
+    '#attributes' => array(
+      'ng-model' => 'nodetype',
+    ),
+  );
+
+  angularjs_template_output(theme('angularjs_examples_nodes_list', array('query' => $form)));
 }
 
 /**
  * Page callback for node example
- * 
+ *
  * @return string
  */
 function angularjs_examples_nodes() {
   drupal_add_library('angularjs', 'angularjs');
   drupal_add_js(drupal_get_path('module', 'angularjs_examples') . '/js/nodelist.js');
-  
+
   return theme('angularjs_examples_nodes');
 }
 
 /**
  * Implements hook_theme
- * 
+ *
  * @return array
  */
 function angularjs_examples_theme() {
@@ -57,10 +68,12 @@ function angularjs_examples_theme() {
     'template' => 'theme/example-nodes',
     'parameters' => array(),
   );
-  
+
   $themes['angularjs_examples_nodes_list'] = array(
     'template' => 'theme/example-nodes-list',
-    'parameters' => array('types' => array())  
+    'parameters' => array(
+      'query' => array(),
+    ),
   );
 
   return $themes;

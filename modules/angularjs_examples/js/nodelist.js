@@ -1,15 +1,32 @@
 angular.module('nodelist', ['node', 'nodes']).
   config(function($routeProvider) {
     $routeProvider.
-      when('/', {controller:ListCtrl, templateUrl:'http://local/d7_dev/angular/nodes/list'}).
+      when('/', {controller:ListCtrl, templateUrl:'http://local:8888/d7_dev/angular/nodes/list'}).
       otherwise({redirectTo:'/'});
   });
 
 
 function ListCtrl($scope, Nodes, Node) {
-  $scope.nodetype = '';
-  $scope.nodes = Nodes.get({limit: 25});
-  $scope.query = {'title': 'Dolo'};
+  var currentClass = this.constructor.name;
+  // Set defaule values.
+  if (!Drupal.settings.angularjs.hasOwnProperty(currentClass)) {
+    return;
+  }
+
+  var values = Drupal.settings.angularjs[currentClass];
+  console.log(values);
+
+  angular.forEach(values, function(value, key) {
+    if (value._type == 'select') {
+      $scope[key] = value;
+    }
+  });
+
+  console.log($scope);
+
+  //$scope.nodes = Nodes.get({limit: 25});
+  // Set default search value.
+  //$scope.query = {'title': 'Dolo'};
 
   $scope.promote = function(node, newValue) {
     var update = new Node();
@@ -19,7 +36,7 @@ function ListCtrl($scope, Nodes, Node) {
     node.promote = newValue;
   }
 
-  $scope.$watch('nodetype', function(newValue, oldValue) {
+  $scope.$watch('nodeType', function(newValue, oldValue) {
     if ('' != newValue) {
       $scope.nodes = Nodes.get({limit: 25, type: newValue});
     }

@@ -45,6 +45,7 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '#options' => $options,
     '#description' => t('Filter by content-type.'),
     '#ng_model' => 'nodeType',
+    '#ng_controller' => 'ListCtrl',
   );
 
   $form['title'] = array(
@@ -54,6 +55,7 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
       'ng-model' => 'query.title',
     ),
     '#description' => t('Filter by title.'),
+    '#ng_controller' => 'ListCtrl',
   );
   return $form;
 }

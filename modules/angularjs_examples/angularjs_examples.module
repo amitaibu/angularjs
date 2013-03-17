@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Implements hook_menu
- *
- * @return array
+ * Implements hook_menu().
  */
 function angularjs_examples_menu() {
   $items = array();
@@ -30,16 +28,23 @@ function angularjs_examples_menu() {
  * @return string
  */
 function angularjs_examples_nodes_list() {
-  $form = array();
+  $output = drupal_get_form('angularjs_examples_nodes_list_form_builder');
+  angularjs_template_output(drupal_render($output));
+  return;
+  angularjs_template_output(theme('angularjs_examples_nodes_list', array('query' => $form)));
+}
 
+function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
+  $options = node_type_get_names();
+
+  // Pass the node-types. We don't set a default value as this should be done on
+  // the client side.
   $form['node_type'] = array(
-    '#type' => 'select',
+    '#type' => 'ng_select',
     '#title' => t('Content type'),
-    '#options' => node_type_get_names(),
-    '#attributes' => array(
-      'ng-model' => 'nodetype',
-    ),
+    '#options' => $options,
     '#description' => t('Filter by content-type.'),
+    '#ng_model' => 'nodeType',
   );
 
   $form['title'] = array(
@@ -50,8 +55,7 @@ function angularjs_examples_nodes_list() {
     ),
     '#description' => t('Filter by title.'),
   );
-
-  angularjs_template_output(theme('angularjs_examples_nodes_list', array('query' => $form)));
+  return $form;
 }
 
 /**

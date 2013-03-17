@@ -46,6 +46,68 @@ function angularjs_library() {
 }
 
 /**
+ * Implements hook_element_info().
+ */
+function angularjs_element_info() {
+  $types['ng_select'] = array(
+    '#input' => TRUE,
+    '#multiple' => FALSE,
+    '#theme' => 'ng_select',
+    '#theme_wrappers' => array('form_element'),
+    '#process' => array('form_process_select', 'ajax_process_form', 'angularjs_process_select'),
+    '#ng_model' => '',
+    '#attached' => array(
+      'library' => array(
+        array('angularjs'),
+      ),
+    ),
+  );
+
+  return $types;
+}
+
+/**
+ * Implements hook_theme().
+ */
+function angularjs_theme() {
+  return array(
+    'ng_select' => array(
+      'render element' => 'element',
+    ),
+  );
+}
+
+function angularjs_process_select($element) {
+  // Pass the option to JS.
+  $data['angularjs'][$element['#name']] = array(
+    'options' => $element['#options'],
+    'required' => $element['#required'],
+  );
+
+  $element['#attached']['js'][] = array(
+    'type' => 'setting',
+    'data' => $data,
+  );
+
+  return $element;
+}
+
+/**
+ * Returns HTML for a ng-select form element.
+ *
+ * @ingroup themeable
+ */
+function theme_ng_select($variables) {
+  $element = $variables['element'];
+  element_set_attributes($element, array('id', 'name', 'size'));
+  _form_set_class($element, array('form-select'));
+
+  return '<select' . drupal_attributes($element['#attributes']) . ' ng-model="' . $element['#ng_model'] . '" ng-options="item.value as item.name for item in items"></select>';
+}
+
+
+
+/**
  * Returns the registered AngularJS modules
  *
  * @param string $type
@@ -130,6 +192,9 @@ function angularjs_angularjs_resources() {
  */
 function angularjs_template_output($var) {
   drupal_add_http_header('Content-Type', 'text/html');
+
+  // Add new JS.
+  echo drupal_get_js();
 
   if (isset($var)) {
     echo $var;

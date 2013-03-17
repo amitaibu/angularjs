@@ -14,15 +14,11 @@ function ListCtrl($scope, Nodes, Node) {
   }
 
   var values = Drupal.settings.angularjs[currentClass];
-  console.log(values);
-
   angular.forEach(values, function(value, key) {
     if (value._type == 'select') {
       $scope[key] = value;
     }
   });
-
-  console.log($scope);
 
   //$scope.nodes = Nodes.get({limit: 25});
   // Set default search value.

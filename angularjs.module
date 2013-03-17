@@ -82,7 +82,7 @@ function angularjs_process_select($element) {
   // Pass the option to JS.
   $options = array();
   foreach ($element['#options'] as $value => $name) {
-    $options[] = array('value' => $key, 'name' => $name);
+    $options[] = array('value' => $value, 'name' => $name);
 
   }
   $data['angularjs'][$element['#ng_controller']][$element['#ng_model']] = array(

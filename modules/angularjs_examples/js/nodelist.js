@@ -15,10 +15,14 @@ function ListCtrl($scope, Nodes, Node) {
 
   var values = Drupal.settings.angularjs[currentClass];
   angular.forEach(values, function(value, key) {
-    if (value._type == 'select') {
-      $scope[key] = value;
-    }
+    $scope[key] = value;
   });
+
+  // @todo: Change with dynamic data.
+  $scope.nodeTable = [
+    {title: 'foo', 'author': 'bar'},
+    {title: 'gee', 'author': 'waz'},
+  ];
 
   //$scope.nodes = Nodes.get({limit: 25});
   // Set default search value.

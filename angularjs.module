@@ -79,14 +79,15 @@ function angularjs_theme() {
     'ng_table' => array(
       'variables' => array(
         'header' => NULL,
-        'rows' => NULL,
         'attributes' => array(),
         'caption' => NULL,
         'sticky' => TRUE,
         'empty' => '',
         // Angular settings
+        'row' => array(),
         'ng_model' => '',
         'ng_controller' => '',
+        'ng_repeat' => '',
       ),
     ),
   );
@@ -136,7 +137,7 @@ function theme_ng_select($variables) {
  */
 function theme_ng_table($variables) {
   $header = $variables['header'];
-  $rows = $variables['rows'];
+  $row = $variables['row'];
   $attributes = $variables['attributes'];
   $caption = $variables['caption'];
   $sticky = $variables['sticky'];
@@ -144,7 +145,7 @@ function theme_ng_table($variables) {
 
   $ng_controller = $variables['ng_controller'];
   $ng_model = $variables['ng_model'];
-  $ng_repeat = !empty($variables['ng_repeat']) ? $variables['ng_repeat'] : "row in $ng_model.list";
+  $ng_repeat = !empty($variables['ng_repeat']) ? $variables['ng_repeat'] : "item in $ng_model";
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
@@ -161,72 +162,55 @@ function theme_ng_table($variables) {
   }
 
   // Add the 'empty' row message if available.
-  if (!count($rows) && $empty) {
+  if (empty($row) && $empty) {
     $header_count = 0;
     foreach ($header as $header_cell) {
       if (is_array($header_cell)) {
-        $header_count += isset($header_cell['colspan']) ? $header_cell['colspan'] : 1;
+        $header_count += 1;
       }
       else {
         $header_count++;
       }
     }
-    $rows[] = array(array('data' => $empty, 'colspan' => $header_count, 'class' => array('empty', 'message')));
+    // @todo: Fix.
+    $rows[] = array(array('data' => $empty, 'class' => array('empty', 'message')));
   }
 
   // Format the table header:
   if (count($header)) {
     // HTML requires that the thead tag has tr tags in it followed by tbody
     // tags. Using ternary operator to check and see if we have any rows.
-    $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
+    $output .= (count($row) ? ' <thead><tr>' : ' <tr>');
     foreach ($header as $cell) {
       $output .= '<th>' . $cell . '</th>';
     }
     // Using ternary operator to close the tags based on whether or not there are rows
-    $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
+    $output .= (count($row) ? " </tr></thead>\n" : "</tr>\n");
   }
 
   // Format the table rows:
-  if (count($rows)) {
+  if (!empty($row)) {
     $output .= "<tbody>\n";
-    $flip = array('even' => 'odd', 'odd' => 'even');
-    $class = 'even';
-    foreach ($rows as  $row) {
-      $attributes = array();
 
-      // Check if we're dealing with a simple or complex row
-      if (isset($row['data'])) {
-        foreach ($row as $key => $value) {
-          if ($key == 'data') {
-            $cells = $value;
-          }
-          else {
-            $attributes[$key] = $value;
-          }
-        }
-      }
-      else {
-        $cells = $row;
-      }
-      if (count($cells)) {
-        // Add odd/even class
-        if (empty($row['no_striping'])) {
-          $class = $flip[$class];
-          $attributes['class'][] = $class;
-        }
-
-        // Build row
-        $output .= ' <tr' . drupal_attributes($attributes) . ' ng-repeat="' . $ng_repeat . '">';
-        foreach ($cells as $cell) {
-          $output .= '<td>' . $cell . '</td>';
-        }
-        $output .= " </tr>\n";
-      }
+    // Build row
+    $output .= ' <tr ng-repeat="' . $ng_repeat . '">';
+    foreach ($row as $cell) {
+      $output .= '<td>' . $cell . '</td>';
     }
+    $output .= " </tr>\n";
     $output .= "</tbody>\n";
   }
 
   $output .= "</table>\n";
+
+
+  $js_settings['angularjs'][$ng_controller][$ng_model] = array(
+    'row' => $row,
+    '_type' => 'table',
+  );
+
+  drupal_add_js($js_settings, 'setting');
+
   return $output;
 }
 

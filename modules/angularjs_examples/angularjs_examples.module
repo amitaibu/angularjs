@@ -30,8 +30,6 @@ function angularjs_examples_menu() {
 function angularjs_examples_nodes_list() {
   $output = drupal_get_form('angularjs_examples_nodes_list_form_builder');
   angularjs_template_output(drupal_render($output));
-  return;
-  angularjs_template_output(theme('angularjs_examples_nodes_list', array('query' => $form)));
 }
 
 function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
@@ -63,18 +61,20 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     t('Author'),
   );
 
-  $rows = array();
-
   $row = array(
-    'foo', 'bar',
+    '{{item.title}}',
+    '{{item.author}}',
   );
 
-  $rows[] = $row;
 
   $form['table'] = array(
     '#theme' => 'ng_table',
     '#header' => $header,
-    '#rows' => $rows,
+    '#row' => $row,
+    '#ng_controller' => 'ListCtrl',
+    '#ng_model' => 'nodeTable',
+    // Optionally filter query.
+    '#ng_repeat' => 'item in nodeTable | filter: query',
   );
 
   return $form;

@@ -56,6 +56,7 @@ function angularjs_element_info() {
     '#theme_wrappers' => array('form_element'),
     '#process' => array('form_process_select', 'ajax_process_form', 'angularjs_process_select'),
     '#ng_model' => '',
+    // @todo: Add option to look at parents(s) for the controller definition.
     '#ng_controller' => '',
     '#attached' => array(
       'library' => array(
@@ -78,7 +79,7 @@ function angularjs_theme() {
   );
 }
 
-function angularjs_process_select($element) {
+function angularjs_process_select($element, $form_state) {
   // Pass the option to JS.
   $options = array();
   foreach ($element['#options'] as $value => $name) {

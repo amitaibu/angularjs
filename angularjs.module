@@ -82,9 +82,11 @@ function angularjs_theme() {
         'rows' => NULL,
         'attributes' => array(),
         'caption' => NULL,
-        'colgroups' => array(),
         'sticky' => TRUE,
         'empty' => '',
+        // Angular settings
+        'ng_model' => '',
+        'ng_controller' => '',
       ),
     ),
   );
@@ -137,9 +139,12 @@ function theme_ng_table($variables) {
   $rows = $variables['rows'];
   $attributes = $variables['attributes'];
   $caption = $variables['caption'];
-  $colgroups = $variables['colgroups'];
   $sticky = $variables['sticky'];
   $empty = $variables['empty'];
+
+  $ng_controller = $variables['ng_controller'];
+  $ng_model = $variables['ng_model'];
+  $ng_repeat = !empty($variables['ng_repeat']) ? $variables['ng_repeat'] : "row in $ng_model.list";
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
@@ -175,7 +180,7 @@ function theme_ng_table($variables) {
     // tags. Using ternary operator to check and see if we have any rows.
     $output .= (count($rows) ? ' <thead><tr>' : ' <tr>');
     foreach ($header as $cell) {
-      $output .= $cell;
+      $output .= '<th>' . $cell . '</th>';
     }
     // Using ternary operator to close the tags based on whether or not there are rows
     $output .= (count($rows) ? " </tr></thead>\n" : "</tr>\n");
@@ -211,9 +216,9 @@ function theme_ng_table($variables) {
         }
 
         // Build row
-        $output .= ' <tr' . drupal_attributes($attributes) . '>';
+        $output .= ' <tr' . drupal_attributes($attributes) . ' ng-repeat="' . $ng_repeat . '">';
         foreach ($cells as $cell) {
-          $output .= $cell;
+          $output .= '<td>' . $cell . '</td>';
         }
         $output .= " </tr>\n";
       }

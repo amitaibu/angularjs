@@ -58,6 +58,25 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '#ng_controller' => 'ListCtrl',
   );
 
+  $header = array(
+    t('Title'),
+    t('Author'),
+  );
+
+  $rows = array();
+
+  $row = array(
+    'foo', 'bar',
+  );
+
+  $rows[] = $row;
+
+  $form['table'] = array(
+    '#theme' => 'ng_table',
+    '#header' => $header,
+    '#rows' => $rows,
+  );
+
   return $form;
 }
 

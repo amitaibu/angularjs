@@ -51,6 +51,7 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '#title' => t('Filter'),
     '#attributes' => array(
       'ng-model' => 'query.title',
+      'placeholder' => t('Search'),
     ),
     '#description' => t('Filter by title.'),
     '#ng_controller' => 'ListCtrl',
@@ -66,16 +67,17 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '{{item.author}}',
   );
 
-
   $form['table'] = array(
     '#theme' => 'ng_table',
     '#header' => $header,
     '#row' => $row,
     '#ng_controller' => 'ListCtrl',
-    '#ng_model' => 'nodeTable',
+    '#ng_model' => 'nodes',
     // Optionally filter query.
-    '#ng_repeat' => 'item in nodeTable | filter: query',
+    '#ng_repeat' => 'item in nodes | filter: query',
   );
+
+  $form['json'] = array('#markup' => '{{nodes | json}}');
 
   return $form;
 }

@@ -1,7 +1,7 @@
 angular.module('nodelist', ['node', 'nodes']).
   config(function($routeProvider) {
     $routeProvider.
-      when('/', {controller:ListCtrl, templateUrl:'http://local:8888/d7_dev/angular/nodes/list'}).
+      when('/', {controller:ListCtrl, templateUrl:'http://local/d7_dev/angular/nodes/list'}).
       otherwise({redirectTo:'/'});
   });
 
@@ -13,20 +13,12 @@ function ListCtrl($scope, Nodes, Node) {
     return;
   }
 
+  $scope.nodes = Nodes.get({limit: 25});
+
   var values = Drupal.settings.angularjs[currentClass];
   angular.forEach(values, function(value, key) {
     $scope[key] = value;
   });
-
-  // @todo: Change with dynamic data.
-  $scope.nodeTable = [
-    {title: 'foo', 'author': 'bar'},
-    {title: 'gee', 'author': 'waz'},
-  ];
-
-  //$scope.nodes = Nodes.get({limit: 25});
-  // Set default search value.
-  //$scope.query = {'title': 'Dolo'};
 
   $scope.promote = function(node, newValue) {
     var update = new Node();
@@ -37,8 +29,8 @@ function ListCtrl($scope, Nodes, Node) {
   }
 
   $scope.$watch('nodeType', function(newValue, oldValue) {
-    if ('' != newValue) {
-      $scope.nodes = Nodes.get({limit: 25, type: newValue});
+    if ('' != newValue.seleted) {
+      $scope.nodes = Nodes.get({limit: 25, type:newValue.selected});
     }
   });
 }

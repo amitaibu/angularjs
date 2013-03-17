@@ -62,21 +62,17 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
   );
 
   $row = array(
-    '{{item | json}}',
-    'foo',
+    '{{node.title}}',
+    '{{node.author.id}}',
   );
 
   $form['table'] = array(
     '#theme' => 'ng_table',
     '#header' => $header,
     '#row' => $row,
-    '#ng_controller' => 'ListCtrl',
-    '#ng_model' => 'nodes',
     // Optionally filter query.
-    '#ng_repeat' => 'item in nodes | filter: query',
+    '#ng_repeat' => 'node in nodes.list | filter: query',
   );
-
-  $form['json'] = array('#markup' => '{{nodes | json}}');
 
   return $form;
 }

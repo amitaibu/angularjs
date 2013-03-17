@@ -7,7 +7,6 @@ angular.module('nodelist', ['node', 'nodes']).
 
 
 function ListCtrl($scope, Nodes, Node) {
-  $scope.nodes = Nodes.get({limit: 5});
   var currentClass = this.constructor.name;
   // Set defaule values.
   if (!Drupal.settings.angularjs.hasOwnProperty(currentClass)) {
@@ -27,9 +26,7 @@ function ListCtrl($scope, Nodes, Node) {
     node.promote = newValue;
   }
 
-  $scope.$watch('nodeType', function(newValue, oldValue) {
-    if ('' != newValue.seleted) {
-      // $scope.nodes = Nodes.get({limit: 25, type:newValue.selected});
-    }
-  });
+  $scope.filterNodeType = function() {
+    $scope.nodes = Nodes.get({limit: 5, type: $scope.nodeType.selected});
+  }
 }

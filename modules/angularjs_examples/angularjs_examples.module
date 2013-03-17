@@ -44,6 +44,10 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     // Define the ng-model and controller.
     '#ng_model' => 'nodeType',
     '#ng_controller' => 'ListCtrl',
+    // Add ng-change.
+    '#attributes' => array(
+      'ng-change' => 'filterNodeType()',
+    ),
   );
 
   $form['title'] = array(

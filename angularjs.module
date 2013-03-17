@@ -209,7 +209,7 @@ function theme_ng_table($variables) {
     '_type' => 'table',
   );
 
-  drupal_add_js($js_settings, 'setting');
+  //drupal_add_js($js_settings, 'setting');
 
   return $output;
 }

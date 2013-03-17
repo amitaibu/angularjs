@@ -13,8 +13,6 @@ function ListCtrl($scope, Nodes, Node) {
     return;
   }
 
-  $scope.nodes = Nodes.get({limit: 25});
-
   var values = Drupal.settings.angularjs[currentClass];
   angular.forEach(values, function(value, key) {
     $scope[key] = value;

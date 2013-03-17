@@ -48,12 +48,11 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
 
   $form['title'] = array(
     '#type' => 'textfield',
-    '#title' => t('Filter'),
+    '#title' => t('Title'),
     '#attributes' => array(
       'ng-model' => 'query.title',
-      'placeholder' => t('Search'),
+      'placeholder' => t('Filter by title'),
     ),
-    '#description' => t('Filter by title.'),
     '#ng_controller' => 'ListCtrl',
   );
 
@@ -63,8 +62,8 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
   );
 
   $row = array(
-    '{{item.title}}',
-    '{{item.author}}',
+    '{{item | json}}',
+    'foo',
   );
 
   $form['table'] = array(

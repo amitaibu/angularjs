@@ -29,7 +29,7 @@ function angularjs_examples_menu() {
  */
 function angularjs_examples_nodes_list() {
   $output = drupal_get_form('angularjs_examples_nodes_list_form_builder');
-  angularjs_template_output(drupal_render($output));
+  return $output;
 }
 
 function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
@@ -78,15 +78,15 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '#row' => $row,
     // Optionally filter query.
     '#ng_repeat' => 'node in nodes.list | filter: query',
+    // Used for the empty text.
+    '#ng_model' => 'nodes.list',
   );
 
   return $form;
 }
 
 /**
- * Page callback for node example
- *
- * @return string
+ * Page callback for node example.
  */
 function angularjs_examples_nodes() {
   drupal_add_library('angularjs', 'angularjs');

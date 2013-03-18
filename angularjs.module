@@ -1,6 +1,41 @@
 <?php
 
 /**
+ * Implements hook_page_delivery_callback_alter().
+ */
+function angularjs_page_delivery_callback_alter(&$callback) {
+  // pjax requests can be detected by the X-PJAX http header.
+  // When serving pjax requests, deliver just the main page content.
+  if (!empty($_SERVER['HTTP_X_ANGULARJS']) && $callback == 'drupal_deliver_html_page') {
+    $callback = 'angularjs_deliver_page_content';
+  }
+}
+
+/**
+ * Delivers only the main content of the requested page, for pjax requests.
+ */
+function angularjs_deliver_page_content($page_callback_result) {
+  if (is_int($page_callback_result)) {
+    // Pass over to drupal_deliver_html_page() to deal with errors.
+    drupal_deliver_html_page($page_callback_result);
+  }
+  else {
+    if (is_null(drupal_get_http_header('Content-Type'))) {
+      drupal_add_http_header('Content-Type', 'text/html; charset=utf-8');
+    }
+
+    // $page_callback_result contains the main contents of the page.
+    // Add a page title, which will be picked up and used by pjax.
+    $output = '<title>' . drupal_get_title() . '</title>' . render($page_callback_result);
+    print($output);
+
+    // Make sure the requests are cached. pajax requests will be cached separately
+    // from standard page requests thanks to the "_pjax" query string.
+    drupal_page_footer();
+  }
+}
+
+/**
  * Implements hook_library().
  */
 function angularjs_library() {
@@ -60,7 +95,8 @@ function angularjs_element_info() {
     '#ng_controller' => '',
     '#attached' => array(
       'library' => array(
-        array('angularjs'),
+        // @todo: Check why this doesn't work.
+        // array('angularjs', 'angularjs'),
       ),
     ),
   );

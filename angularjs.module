@@ -27,6 +27,7 @@ function angularjs_deliver_page_content($page_callback_result) {
     // $page_callback_result contains the main contents of the page.
     // Add a page title, which will be picked up and used by pjax.
     $output = '<title>' . drupal_get_title() . '</title>' . render($page_callback_result);
+    $output .= drupal_get_js();
     print($output);
 
     // Make sure the requests are cached. pajax requests will be cached separately

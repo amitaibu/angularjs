@@ -28,8 +28,7 @@ function angularjs_examples_menu() {
  * @return string
  */
 function angularjs_examples_nodes_list() {
-  $output = drupal_get_form('angularjs_examples_nodes_list_form_builder');
-  return $output;
+  return drupal_get_form('angularjs_examples_nodes_list_form_builder');
 }
 
 function angularjs_examples_nodes_list_form_builder($form, &$form_state) {

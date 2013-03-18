@@ -1,7 +1,7 @@
 angular.module('nodelist', ['node', 'nodes']).
   config(function($routeProvider) {
     $routeProvider.
-      when('/', {controller:ListCtrl, templateUrl:'http://local/d7_dev/angular/nodes/list'}).
+      when('/', {controller:ListCtrl, templateUrl: Drupal.settings.angularjsApp.basePath + '/angular/nodes/list'}).
       otherwise({redirectTo:'/'});
   });
 

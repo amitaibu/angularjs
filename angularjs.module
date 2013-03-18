@@ -72,11 +72,15 @@ function angularjs_library() {
     ),
   );
 
-  $settings = array(
-    'restws_csrf_token' => drupal_get_token('restws')
+  // Add CSRF token required by restWS.
+  $js_settings = array(
+    'angularjsApp' => array(
+      'restws_csrf_token' => drupal_get_token('restws'),
+      'basePath' => url('', array('absolute' => TRUE)),
+    ),
   );
 
-  drupal_add_js($settings, 'setting');
+  drupal_add_js($js_settings, 'setting');
 
   return $libraries;
 }

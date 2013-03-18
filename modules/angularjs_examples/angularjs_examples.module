@@ -75,10 +75,13 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
     '#theme' => 'ng_table',
     '#header' => $header,
     '#row' => $row,
+    '#empty' => t('No content found.'),
     // Optionally filter query.
     '#ng_repeat' => 'node in nodes.list | filter: query',
     // Used for the empty text.
     '#ng_model' => 'nodes.list',
+    // Empty text logic.
+    '#ng_empty' => '(nodes.list | filter: query).length == 0',
   );
 
   return $form;

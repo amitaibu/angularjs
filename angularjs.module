@@ -120,11 +120,12 @@ function angularjs_theme() {
         'caption' => NULL,
         'sticky' => TRUE,
         'empty' => '',
-        // Angular settings
+        // Angular settings.
         'row' => array(),
         'ng_model' => '',
         'ng_controller' => '',
         'ng_repeat' => '',
+        'ng_empty' => '',
       ),
     ),
   );
@@ -183,6 +184,7 @@ function theme_ng_table($variables) {
   $ng_controller = $variables['ng_controller'];
   $ng_model = $variables['ng_model'];
   $ng_repeat = !empty($variables['ng_repeat']) ? $variables['ng_repeat'] : "item in $ng_model";
+  $ng_empty = !empty($variables['ng_empty']) ? $variables['ng_empty'] : "!$ng_model.length";
 
   // Add sticky headers, if applicable.
   if (count($header) && $sticky) {
@@ -235,18 +237,13 @@ function theme_ng_table($variables) {
       $output .= '<td>' . $cell . '</td>';
     }
     $output .= " </tr>\n";
+
+    // Add empty-text <tr>.
+    $output .= '<tr ng-show="'. $ng_empty . '"><td>' . $empty . '</td></tr>';
     $output .= "</tbody>\n";
   }
 
   $output .= "</table>\n";
-
-
-  $js_settings['angularjs'][$ng_controller][$ng_model] = array(
-    'row' => $row,
-    '_type' => 'table',
-  );
-
-  //drupal_add_js($js_settings, 'setting');
 
   return $output;
 }

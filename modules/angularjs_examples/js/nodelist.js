@@ -32,7 +32,6 @@ function ListCtrl($scope, Nodes, Node) {
   $scope.filterNodeType = function() {
     var nodeType = $scope.nodeType.selected;
     $scope.cache[nodeType] = $scope.cache[nodeType] || {};
-    console.log($scope.cache[nodeType]);
     if ($scope.cache[nodeType].list) {
       // Get values from cache.
       $scope.nodes = $scope.cache[nodeType];

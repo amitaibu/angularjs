@@ -13,13 +13,11 @@ function ListCtrl($scope, Nodes, Node) {
   var currentClass = this.constructor.name;
   // Set defaule values.
   if (!Drupal.settings.angularjs.hasOwnProperty(currentClass)) {
-    return;
+    var values = Drupal.settings.angularjs[currentClass];
+    angular.forEach(values, function(value, key) {
+      $scope[key] = value;
+    });
   }
-
-  var values = Drupal.settings.angularjs[currentClass];
-  angular.forEach(values, function(value, key) {
-    $scope[key] = value;
-  });
 
   $scope.promote = function(node, newValue) {
     var update = new Node();
@@ -43,7 +41,4 @@ function ListCtrl($scope, Nodes, Node) {
     }
 
   }
-
-  // Invoke the filter.
-  $scope.filterNodeType();
 }

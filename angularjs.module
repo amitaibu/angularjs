@@ -98,6 +98,7 @@ function angularjs_element_info() {
     '#ng_model' => '',
     // @todo: Add option to look at parents(s) for the controller definition.
     '#ng_controller' => '',
+    '#init_values' => FALSE,
     '#attached' => array(
       'library' => array(
         // @todo: Check why this doesn't work.
@@ -143,22 +144,40 @@ function angularjs_process_select($element, $form_state) {
   $options = array();
   foreach ($element['#options'] as $value => $name) {
     $options[] = array('value' => $value, 'name' => $name);
-
   }
-  $data['angularjs'][$element['#ng_controller']][$element['#ng_model']] = array(
+
+
+  $values = array(
     'options' => $options,
     'required' => $element['#required'],
     'selected' => $element['#default_value'],
     '_type' => 'select',
     '_name' => $element['#name'],
+    'init_values' => $element['#init_values'],
   );
+
+  $ng_controller = $element['#ng_controller'];
+  $ng_model  = $element['#ng_model'];
+  angular_init_values_attach_element($element, $ng_controller, $ng_model, $values);
+
+  return $element;
+}
+
+/**
+ * Add JS values to Drupal.settings based on the ng-controller and ng-model.
+ *
+ * @param $element
+ * @param $ng_controller
+ * @param $ng_model
+ * @param array $values
+ */
+function angular_init_values_attach_element(&$element, $ng_controller, $ng_model, $values = array()) {
+  $data['angularjs'][$ng_controller][$ng_model] = $values;
 
   $element['#attached']['js'][] = array(
     'type' => 'setting',
     'data' => $data,
   );
-
-  return $element;
 }
 
 /**

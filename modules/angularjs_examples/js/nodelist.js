@@ -27,17 +27,21 @@ function ListCtrl($scope, Nodes, Node) {
     node.promote = newValue;
   }
 
-  $scope.filterNodeType = function() {
+  $scope.filterNodeType = function(useServer) {
+    useServer = useServer || true;
     var nodeType = $scope.nodeType.selected;
     $scope.cache[nodeType] = $scope.cache[nodeType] || {};
     if ($scope.cache[nodeType].list) {
       // Get values from cache.
       $scope.nodes = $scope.cache[nodeType];
     }
-    else {
+    else if (useServer) {
       // Call server.
       $scope.nodes = Nodes.get({limit: 5, type: $scope.nodeType.selected});
       $scope.cache[nodeType] = $scope.nodes;
     }
   }
+
+  // Make sure the init values are cached.
+  $scope.filterNodeType(false);
 }

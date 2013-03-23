@@ -12,7 +12,7 @@ function ListCtrl($scope, Nodes, Node) {
 
   var currentClass = this.constructor.name;
   // Set defaule values.
-  if (!Drupal.settings.angularjs.hasOwnProperty(currentClass)) {
+  if (Drupal.settings.angularjs.hasOwnProperty(currentClass)) {
     var values = Drupal.settings.angularjs[currentClass];
     angular.forEach(values, function(value, key) {
       $scope[key] = value;
@@ -39,6 +39,5 @@ function ListCtrl($scope, Nodes, Node) {
       $scope.nodes = Nodes.get({limit: 5, type: $scope.nodeType.selected});
       $scope.cache[nodeType] = $scope.nodes;
     }
-
   }
 }

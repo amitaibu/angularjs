@@ -85,9 +85,13 @@ function angularjs_examples_nodes_list_form_builder($form, &$form_state) {
   );
 
   // Init values.
+
+
   $values = array(
-    array('title' => 'foo', 'author' => 1),
-    array('title' => 'bar', 'author' => 2),
+    'list' => array(
+      array('title' => 'foo', 'author' => 1),
+      array('title' => 'bar', 'author' => 2),
+    ),
   );
   angular_init_values_attach_element($form, 'ListCtrl', 'nodes', $values);
 
